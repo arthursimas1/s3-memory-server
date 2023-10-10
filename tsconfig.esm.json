@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./build/esm",
+    "module": "ESNext",
+    "target": "ES2022",
+    "tsBuildInfoFile": "./build/esm/tsconfig.tsbuildinfo",
+    "moduleResolution": "Node",
+  },
+}
