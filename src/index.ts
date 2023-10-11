@@ -115,7 +115,8 @@ export class MinIOBinary {
     const _os = platformMapping[platform as keyof typeof platformMapping]
     const _arch = archMapping[arch as keyof typeof archMapping]
 
-    const downloadDir = '/home/arthur/.cache/s3-binaries'
+    //const downloadDir = '/home/arthur/.cache/s3-binaries'
+    const downloadDir = path.join(os.tmpdir(), 's3-binaries')
     fs.mkdirSync(downloadDir, { mode: 0o775, recursive: true })
     const downloadPath = path.join(downloadDir, `minio-${_os}-${_arch}-latest`)
 
