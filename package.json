@@ -1,6 +1,6 @@
 {
   "name": "s3-memory-server",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "",
   "bin": "./build/cjs/index.js",
   "main": "./build/cjs/index.js",

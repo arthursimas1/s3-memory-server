@@ -82,9 +82,8 @@ export class MinIOBinary {
       return opts.downloadPath
     }
 
-    const binaryUrl = this.createURL(opts)
     this.assertPermission(opts.downloadDir)
-    await this.download({ url: binaryUrl, downloadPath: opts.downloadPath })
+    await this.download({ url: opts.binaryUrl, downloadPath: opts.downloadPath })
     this.setFileMod(opts.downloadPath)
     return opts.downloadPath
   }
@@ -116,15 +115,18 @@ export class MinIOBinary {
     const _arch = archMapping[arch as keyof typeof archMapping]
 
     //const downloadDir = '/home/arthur/.cache/s3-binaries'
+    const extension = _os === OS.WINDOWS ? '.exe' : ''
     const downloadDir = path.join(os.tmpdir(), 's3-binaries')
     fs.mkdirSync(downloadDir, { mode: 0o775, recursive: true })
-    const downloadPath = path.join(downloadDir, `minio-${_os}-${_arch}-latest`)
+    const downloadPath = path.join(downloadDir, `minio-${_os}-${_arch}-latest${extension}`)
+    const binaryUrl = `https://dl.min.io/server/minio/release/${_os}-${_arch}/minio${extension}`
 
     return {
       os: _os,
       arch: _arch,
       downloadDir,
       downloadPath,
+      binaryUrl,
     }
   }
 
@@ -150,10 +152,6 @@ export class MinIOBinary {
 
   private static setFileMod(downloadPath: string) {
     return fs.chmodSync(downloadPath, 0o775)
-  }
-
-  static createURL(opts: { os: OS, arch: ARCH }) {
-    return `https://dl.min.io/server/minio/release/${opts.os}-${opts.arch}/minio${opts.os === OS.WINDOWS ? '.exe' : ''}`
   }
 
   static download(opts: { url: string, downloadPath: string }) {
