@@ -114,6 +114,10 @@ export class MinIOBinary {
     const _os = platformMapping[platform as keyof typeof platformMapping]
     const _arch = archMapping[arch as keyof typeof archMapping]
 
+    // TODO: allow the user to choose a specific version from the archive
+    // https://dl.min.io/server/minio/release/
+
+    // TODO: fix the downloadDir variable, allow the user to choose where to download
     //const downloadDir = '/home/arthur/.cache/s3-binaries'
     const extension = _os === OS.WINDOWS ? '.exe' : ''
     const downloadDir = path.join(os.tmpdir(), 's3-binaries')
@@ -394,6 +398,16 @@ export class S3MemoryServer {
 export default S3MemoryServer
 
 async function main() {
+  const argv = process.argv.slice(2)
+  const download = argv.includes('--download')
+
+  if (download) {
+    const binaryPath = await MinIOBinary.install()
+
+    console.log(`MinIO binary downloaded at path ${binaryPath}`)
+    return
+  }
+
   const memoryServer = await S3MemoryServer.create({
     auth: {
       user: 'admin123',
